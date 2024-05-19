@@ -4,14 +4,14 @@ import config
 
 class ExchangeDataFetcher:
     def __init__(self):
-        self.exchanges = {
+        self.exchanges = {  # More exchanges can be added by simply adding them to self.exchanges
             'kraken': ccxt.kraken({
-                'apiKey': config.kraken_api_key,
-                'secret': config.kraken_private_key
+                'apiKey': config.kraken_api_key,  # Insert your Kraken API key
+                'secret': config.kraken_private_key  # Insert your Kraken Private Key
             }),
             'gemini': ccxt.gemini({
-                'apiKey': config.gemini_api_key,
-                'secret': config.gemini_private_key
+                'apiKey': config.gemini_api_key,  # Insert your Gemini API key
+                'secret': config.gemini_private_key  # Insert your Gemini Private key
             })
         }
 
