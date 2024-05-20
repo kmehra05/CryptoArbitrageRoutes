@@ -43,9 +43,9 @@ class ArbitrageGraph:
                                                         from_symbol=from_symbol, to_symbol=to_symbol)
                             except Exception:
                                 pass
-                        elif current_symbol == to_symbol and from_symbol != base_conversion_symbol:
-                            continue
-                        elif current_symbol != to_symbol:
+                        elif (current_symbol == to_symbol and from_symbol != base_conversion_symbol
+                              or current_symbol != to_symbol or
+                              (current_symbol == to_symbol and from_symbol == base_conversion_symbol and base_conversion_symbol != "USD")):
                             continue
                         elif from_exchange_currency_pair != to_exchange_currency_pair:
                             arbitrage_opportunity = to_data['bid'] - from_data['ask']
