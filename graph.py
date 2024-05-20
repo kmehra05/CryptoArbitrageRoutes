@@ -1,7 +1,5 @@
 import networkx as nx
 
-import fetch_data
-
 
 class ArbitrageGraph:
     def __init__(self):

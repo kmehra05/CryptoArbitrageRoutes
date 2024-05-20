@@ -1,6 +1,5 @@
 import networkx as nx
 
-import graph
 
 class Pathfinding:
     def __init__(self, graph):
@@ -45,4 +44,3 @@ class Pathfinding:
                     print("-" * 50)
         else:
             print("No valid starting exchange found.")
-
