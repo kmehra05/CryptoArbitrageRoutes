@@ -22,6 +22,7 @@ class ExchangeDataFetcher:
         all_prices = {}
         # Generate pairs for each symbol against USD and every combination with other symbols
         pairs = [f"{sym}/USD" for sym in symbols]
+        pairs += [f"USD/{sym}" for sym in symbols]
         pairs += [f"{sym1}/{sym2}" for sym1 in symbols for sym2 in symbols if sym1 != sym2]
 
         for pair in pairs:
@@ -31,12 +32,13 @@ class ExchangeDataFetcher:
                 try:
                     ticker = exchange.fetch_ticker(pair)
                     prices[exchange_name] = {
+                        'symbol': pair,
                         'bid': ticker['bid'],
                         'ask': ticker['ask']
                     }
                     valid_data_found = True  # Set flag true if at least one exchange returns data
                 except Exception as e:
-                    print(f"Error fetching data from {exchange_name} for {pair}: {str(e)}")
+                    pass
 
             # Only add pair to all_prices if at least one exchange has valid data
             if valid_data_found:
