@@ -30,8 +30,6 @@ class ArbitrageGraph:
     def _create_edge(self, from_exchange_pair, to_exchange_pair, to_data, from_data, tickers_data):
         start_exchange, current_symbol, start_symbol = from_exchange_pair.split("/")
         end_exchange, to_symbol, base_to_symbol = to_exchange_pair.split("/")
-        from_symbol = f"{current_symbol}/{start_symbol}"
-        end_symbol = f"{to_symbol}/{base_to_symbol}"
         if current_symbol == to_symbol and start_symbol == base_to_symbol:
             arbitrage_multiplier = to_data['bid'] / from_data['ask']
             weight = 1 / arbitrage_multiplier
@@ -39,7 +37,8 @@ class ArbitrageGraph:
                                 arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
                                 to_bid=to_data['bid'])
         elif current_symbol != to_symbol and start_symbol == base_to_symbol == "USD":
-            intermediate_data = {}
+            arbitrage_multiplier = 0
+            weight = 0
             try:  # consider BTC/USD to ETH/BTC to ETH/USD
                 if f'{to_symbol}/{current_symbol}' in tickers_data and f'{end_exchange}' in tickers_data[
                     f'{to_symbol}/{current_symbol}']:
@@ -48,9 +47,6 @@ class ArbitrageGraph:
                     total_usd_converted = ((1 / intermediate_data['ask']) * to_data['bid'])
                     arbitrage_multiplier = total_usd_converted / from_data['ask']
                     weight = 1 / arbitrage_multiplier
-                    self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
-                                        arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
-                                        to_bid=to_data['bid'])
                 # consider ETH/USD to ETH/BTC to BTC/USD
                 elif f'{current_symbol}/{to_symbol}' in tickers_data and f'{end_exchange}' in tickers_data[
                     f'{current_symbol}/{to_symbol}']:
@@ -58,9 +54,11 @@ class ArbitrageGraph:
                     total_usd_converted = intermediate_data['ask'] * to_data['bid']
                     arbitrage_multiplier = total_usd_converted / from_data['ask']
                     weight = 1 / arbitrage_multiplier
-                    self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
-                                        arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
-                                        to_bid=to_data['bid'])
+
+                self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
+                                    arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
+                                    to_bid=to_data['bid'])
+
             except Exception:
                 pass
         else:
