@@ -23,48 +23,53 @@ class ArbitrageGraph:
                     to_symbol, base_conversion_symbol = to_pair.split("/")
                     for to_exchange, to_data in to_exchanges_data.items():
                         to_exchange_currency_pair = f"{to_exchange}/{to_pair}"
+                        if from_exchange_currency_pair != to_exchange_currency_pair:
+                            self._create_edge(from_exchange_currency_pair, to_exchange_currency_pair, to_data,
+                                              from_data, tickers_data)
 
-                        if current_symbol == base_conversion_symbol and from_symbol != to_symbol:
-                            try:
-                                total_to_symbol = 1.0 / to_data['bid']
-                                total_from_symbol = total_to_symbol * tickers_data[f'{to_symbol}/{from_symbol}'][f'{to_exchange}']['bid']
-                                arbitrage_opportunity = total_from_symbol - from_data['ask']
-                                arbitrage_percentage = arbitrage_opportunity / from_data['ask']
-                                if arbitrage_percentage > 0:
-                                    weight = 1.0 / arbitrage_percentage
-                                    self.graph.add_edge(from_exchange_currency_pair, to_exchange_currency_pair,
-                                                        weight=weight,
-                                                        arbitrage_opportunity=arbitrage_opportunity,
-                                                        arbitrage_percentage=arbitrage_percentage,
-                                                        from_pair=from_pair, to_pair=to_pair,
-                                                        from_ask=from_data['ask'], to_bid=total_from_symbol,
-                                                        from_symbol=from_symbol, to_symbol=to_symbol)
-                            except Exception:
-                                pass
-                        elif (current_symbol == to_symbol and from_symbol != base_conversion_symbol
-                              or current_symbol != to_symbol or
-                              (current_symbol == to_symbol and from_symbol == base_conversion_symbol and base_conversion_symbol != "USD")):
-                            continue
-                        elif from_exchange_currency_pair != to_exchange_currency_pair:
-                            arbitrage_opportunity = to_data['bid'] - from_data['ask']
-                            arbitrage_percentage = arbitrage_opportunity / from_data['ask']
-                            # Only add edge if the arbitrage opportunity is positive (profitable)
-                            if arbitrage_percentage > 0:
-                                weight = 1.0 / arbitrage_percentage
-                                self.graph.add_edge(from_exchange_currency_pair, to_exchange_currency_pair,
-                                                    weight=weight,
-                                                    arbitrage_opportunity=arbitrage_opportunity,
-                                                    arbitrage_percentage=arbitrage_percentage,
-                                                    from_pair=from_pair, to_pair=to_pair,
-                                                    from_ask=from_data['ask'], to_bid=to_data['bid'],
-                                                    from_symbol=from_symbol, to_symbol=to_symbol)
+    def _create_edge(self, from_exchange_pair, to_exchange_pair, to_data, from_data, tickers_data):
+        start_exchange, current_symbol, start_symbol = from_exchange_pair.split("/")
+        end_exchange, to_symbol, base_to_symbol = to_exchange_pair.split("/")
+        from_symbol = f"{current_symbol}/{start_symbol}"
+        end_symbol = f"{to_symbol}/{base_to_symbol}"
+        if current_symbol == to_symbol and start_symbol == base_to_symbol:
+            arbitrage_multiplier = to_data['bid'] / from_data['ask']
+            weight = 1 / arbitrage_multiplier
+            self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
+                                arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
+                                to_bid=to_data['bid'])
+        elif current_symbol != to_symbol and start_symbol == base_to_symbol == "USD":
+            intermediate_data = {}
+            try:  # consider BTC/USD to ETH/BTC to ETH/USD
+                if f'{to_symbol}/{current_symbol}' in tickers_data and f'{end_exchange}' in tickers_data[
+                    f'{to_symbol}/{current_symbol}']:
+                    intermediate_data = tickers_data[f'{to_symbol}/{current_symbol}'][f'{end_exchange}']
+                    #
+                    total_usd_converted = ((1 / intermediate_data['ask']) * to_data['bid'])
+                    arbitrage_multiplier = total_usd_converted / from_data['ask']
+                    weight = 1 / arbitrage_multiplier
+                    self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
+                                        arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
+                                        to_bid=to_data['bid'])
+                # consider ETH/USD to ETH/BTC to BTC/USD
+                elif f'{current_symbol}/{to_symbol}' in tickers_data and f'{end_exchange}' in tickers_data[
+                    f'{current_symbol}/{to_symbol}']:
+                    intermediate_data = tickers_data[f'{current_symbol}/{to_symbol}'][f'{end_exchange}']
+                    total_usd_converted = intermediate_data['ask'] * to_data['bid']
+                    arbitrage_multiplier = total_usd_converted / from_data['ask']
+                    weight = 1 / arbitrage_multiplier
+                    self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
+                                        arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
+                                        to_bid=to_data['bid'])
+            except Exception:
+                pass
+        else:
+            pass
 
     def print_graph(self):
         for edge in self.graph.edges(data=True):
             from_node, to_node, data = edge
             print(f"Edge from {from_node} (buy at ask) to {to_node} (sell at bid):")
-            print(f"    From Symbol: {data['from_symbol']} | To Symbol: {data['to_symbol']}")
             print(f"    Ask at {from_node}: {data['from_ask']} | Bid at {to_node}: {data['to_bid']}")
-            print(f"    Arbitrage Opportunity: {data['arbitrage_opportunity']}")
-            print(f"    Arbitrage Percentage: {data['arbitrage_percentage']}")
+            print(f"    Arbitrage Multiplier: {data['arbitrage_multiplier']}")
             print(f"    Weight of: {data['weight']}")
