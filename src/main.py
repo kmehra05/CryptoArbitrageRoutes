@@ -1,29 +1,29 @@
 import pathfinding
 from fetch_data import ExchangeDataFetcher
 from graph import ArbitrageGraph
+import main_window
 
 
 def main():
-    # Instantiate the data fetcher
+
     data_fetcher = ExchangeDataFetcher()
 
-    # Specify the symbols you're interested in
-    symbols = ['BTC', 'ETH', 'DOGE', 'SOL', 'ADA', 'SHIB', 'AVAX']  # Add more symbols as required
+    ticker_list = ['BTC', 'ETH']
 
-    # Fetch ticker data for specified symbols
-    tickers_data = data_fetcher.fetch_tickers(*symbols)
+    tickers_data = data_fetcher.fetch_tickers(*ticker_list)
 
-    # Initialize the arbitrage graph
     arbitrage_graph = ArbitrageGraph()
 
-    # Populate the graph with nodes
     arbitrage_graph.populate_nodes(tickers_data)
 
-    # Update the graph with edges representing arbitrage opportunities
     arbitrage_graph.update_edges(tickers_data)
 
-    pathfinding.PathFinding(arbitrage_graph).print_paths("kraken/BTC/USD")
+    pathfinder = pathfinding.PathFinding(arbitrage_graph)
 
+    starting_node = "kraken/BTC/USD"
 
-if __name__ == "__main__":
+    best_path = pathfinder.find_best_path(starting_node)
+    print(best_path)
+
+if __name__ == '__main__':
     main()

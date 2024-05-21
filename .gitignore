@@ -1,3 +1,8 @@
 .venv/
 .idea/
 .env
+bin/
+pyvenv.cfg
+share/
+lib/
+src/__pycache__/

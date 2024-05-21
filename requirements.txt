@@ -1,3 +1,4 @@
-python-dotenv
-ccxt
-networkx
+python-dotenv~=1.0.1
+ccxt~=4.3.27
+networkx~=3.2.1
+matplotlib~=3.9.0
