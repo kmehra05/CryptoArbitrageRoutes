@@ -1,6 +1,5 @@
 import heapq
 
-
 class PathFinding:
     def __init__(self, arbitrage_graph):
         self.graph = arbitrage_graph.graph  # Access the graph attribute of the ArbitrageGraph instance
@@ -17,20 +16,27 @@ class PathFinding:
         paths = {node: [] for node in self.graph.nodes}
         paths[source] = [source]
 
+        # Set to track visited nodes
+        visited = set()
+
         while queue:
             # Extract the node with the smallest distance
             current_distance, current_node = heapq.heappop(queue)
 
+            # Mark the node as visited
+            visited.add(current_node)
+
             # Explore each neighbor of the current node
             for neighbor in self.graph[current_node]:
-                weight = self.graph[current_node][neighbor]['weight']
-                new_distance = current_distance * weight
+                if neighbor not in visited:
+                    weight = self.graph[current_node][neighbor]['weight']
+                    new_distance = current_distance * weight
 
-                # If a shorter path is found, update the distance and path
-                if new_distance < distances[neighbor]:
-                    distances[neighbor] = new_distance
-                    paths[neighbor] = paths[current_node] + [neighbor]
-                    heapq.heappush(queue, (new_distance, neighbor))
+                    # If a shorter path is found, update the distance and path
+                    if new_distance < distances[neighbor]:
+                        distances[neighbor] = new_distance
+                        paths[neighbor] = paths[current_node] + [neighbor]
+                        heapq.heappush(queue, (new_distance, neighbor))
 
         return distances, paths
 
@@ -39,7 +45,21 @@ class PathFinding:
         min_distance = float('inf')
         best_path = []
         for node, distance in distances.items():
-            if distance < min_distance:
+            if distance < min_distance and node != source:
                 min_distance = distance
                 best_path = paths[node]
         return min_distance, best_path
+
+    def print_paths(self, source):
+        everything = self.find_all_paths(source)
+        best_distance, best_path = self.find_best_path(source)
+        print(everything)
+        distances, all_paths = everything
+
+        print("All paths from source:", source)
+        for node, path in all_paths.items():
+            if distances[node] != float('inf'):
+                print(f"Path to {node}: {path} with multiplicative weight: {distances[node]}")
+        print("\nBest path:")
+        print(f"Path: {best_path} with the best multiplicative weight: {best_distance}")
+        print(f"Investment: $10 --> ${(1/best_distance) * 10}")
