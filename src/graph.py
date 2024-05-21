@@ -63,11 +63,3 @@ class ArbitrageGraph:
             self.graph.add_edge(from_exchange_pair, to_exchange_pair, weight=weight,
                                 arbitrage_multiplier=arbitrage_multiplier, from_ask=from_data['ask'],
                                 to_bid=to_data['bid'])
-
-    def print_graph(self):
-        for edge in self.graph.edges(data=True):
-            from_node, to_node, data = edge
-            print(f"Edge from {from_node} (buy at ask) to {to_node} (sell at bid):")
-            print(f"    Ask at {from_node}: {data['from_ask']} | Bid at {to_node}: {data['to_bid']}")
-            print(f"    Arbitrage Multiplier: {data['arbitrage_multiplier']}")
-            print(f"    Weight of: {data['weight']}")

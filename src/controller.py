@@ -31,7 +31,3 @@ class ArbitrageController:
 
         # Start the long-running task in a separate thread
         threading.Thread(target=run).start()
-
-
-if __name__ == "__main__":
-    controller = ArbitrageController()

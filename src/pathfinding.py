@@ -81,15 +81,3 @@ class PathFinding:
             best_path_graph.add_edge(u, v, weight=1 / weight)  # Use reciprocal of the original weight
 
         return best_path_graph, total_multiplier
-
-    def print_paths(self, source):
-        distances, all_paths = self.find_all_paths(source)
-        best_distance, best_path, total_multiplier = self.find_best_path(source)
-
-        print("All paths from source:", source)
-        for node, path in all_paths.items():
-            if distances[node] != float('inf'):
-                print(f"Path to {node}: {path} with multiplicative weight: {distances[node]}")
-        print("\nBest path:")
-        print(f"Path: {best_path} with the best multiplicative weight: {best_distance}")
-        print(f"Investment: $10 --> ${total_multiplier * 10}")
