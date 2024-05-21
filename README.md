@@ -15,8 +15,8 @@ Cryptocurrency Arbitrage Routes is a system that leverages a custom implementati
 - **Python:** Primary programming language.
 - **ccxt:** Library used for fetching data from various exchanges.
 - **networkx:** Facilitates the construction and manipulation of complex network graphs.
--**Tkinter:** For creating the GUI
-- **matplotlib:** For visualizing the results and optimal paths graphically.
+- **Tkinter:** For creating the GUI
+- **matplotlib:** For visualizing the results and optimal paths graphically in the GUI
 
 ## Installation
 Refer to `INSTALL.md` for detailed installation and setup instructions.
