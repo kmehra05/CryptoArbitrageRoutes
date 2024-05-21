@@ -5,7 +5,7 @@ Cryptocurrency Arbitrage Routes is a system that leverages a custom implementati
 
 ## Features
 - **Data Integration:** Real-time and historical pricing data from multiple exchanges are integrated using ccxt.
-- **Graph Construction:** Constructs a dynamic graph where nodes represent exchange/ticker pairs, and edges denote potential arbitrage opportunities, factoring in the inverse of the profitability multiplier as the edge weight to easily be used for Djikstra’s algorithm with the purpose of maximum path length rather than minimum path length.
+- **Graph Construction:** Constructs a dynamic graph with networkx where nodes represent exchange/ticker pairs, and edges denote potential arbitrage opportunities, factoring in the inverse of the profitability multiplier as the edge weight to easily be used for Djikstra’s algorithm with the purpose of maximum path length rather than minimum path length.
 - **Path Optimization:** Utilizes a custom implementation of Dijkstra's algorithm tailored for maximizing profitability by considering the compounded effect of consecutive arbitrage opportunities by multiplying edge weights to determine path length instead of summing.
 - **Interactive GUI:** Users can select cryptocurrencies to analyze and visualize the optimal arbitrage path starting from a chosen ticker and exchange, with profit metrics shown.
 
