@@ -22,8 +22,8 @@ Cryptocurrency Arbitrage Routes is a system that leverages a custom implementati
 Refer to `INSTALL.md` for detailed installation and setup instructions.
 
 ## Limitations
-- **Theoretical Application:** The current implementation does not account for transaction costs, which affects profitability metrics that are outputted.
-- **Performance:** Due to computational complexity, the scalability is currently limited, affecting performance with large sets of tickers.
+- **Theoretical Application:** The current implementation does not account for transaction costs, which can heavily impact profitability metrics that are outputted.
+- **Performance:** Due to computational complexity, the scalability is currently limited, affecting performance with large sets of tickers as well as real-time performance in an applicable setting.
 - **Exchange Coverage:** Initially configured for two exchanges, but expandable via modifications in `fetch_data.py`.
 
 ## Usage
