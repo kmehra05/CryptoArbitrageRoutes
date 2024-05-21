@@ -53,7 +53,7 @@ class MainWindow(tk.Tk):
     def on_focus_in_list(self, event):
         if self.ticker_list.get() == 'BTC, ETH, DOGE':
             self.ticker_list.delete(0, tk.END)
-            self.ticker_list.config(foreground="black")
+            self.ticker_list.config(foreground="white")
 
     def on_focus_out_list(self, event):
         if not self.ticker_list.get():
@@ -63,7 +63,7 @@ class MainWindow(tk.Tk):
     def on_focus_in_entry(self, event):
         if self.ticker_entry.get() == 'BTC':
             self.ticker_entry.delete(0, tk.END)
-            self.ticker_entry.config(foreground="black")
+            self.ticker_entry.config(foreground="white")
 
     def on_focus_out_entry(self, event):
         if not self.ticker_entry.get():
@@ -71,6 +71,7 @@ class MainWindow(tk.Tk):
             self.ticker_entry.config(foreground="grey")
 
     def on_plot_button_clicked(self):
+        self.summary_to_loading()  # Show loading indicator
         self.controller.plot_graph()
 
     def update_exchange_list(self, exchange_list):
@@ -83,11 +84,16 @@ class MainWindow(tk.Tk):
             'start_exchange': self.exchange_var.get()
         }
 
+    def summary_to_loading(self):
+        self.path_summary.config(text="Loading...", fg="red")
+
+    def loading_to_summary(self, summary):
+        self.path_summary.config(text=summary, fg="white")
+
     def display_graph(self, graph, total_multiplier):
         self.path_summary.config(text=pathfinding.generate_best_path_summary(graph, total_multiplier, 100))
-        plt.figure(figsize=(8, 5))
-        plt.title("Best Arbitrage Path")
-        pos = nx.arf_layout(graph)  # Positions nodes using Fruchterman-Reingold force-directed algorithm
+        plt.figure(figsize=(10, 5))
+        pos = nx.planar_layout(graph)
 
         # Draw nodes
         nx.draw_networkx_nodes(graph, pos, node_color='skyblue', node_size=1500)
