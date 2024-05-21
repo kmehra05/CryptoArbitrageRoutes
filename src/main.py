@@ -8,7 +8,7 @@ def main():
 
     data_fetcher = ExchangeDataFetcher()
 
-    ticker_list = ['BTC', 'ETH']
+    ticker_list = ['BTC', 'ETH', 'DOGE']
 
     tickers_data = data_fetcher.fetch_tickers(*ticker_list)
 
@@ -19,11 +19,11 @@ def main():
     arbitrage_graph.update_edges(tickers_data)
 
     pathfinder = pathfinding.PathFinding(arbitrage_graph)
-
+    pathfinder.print_paths('kraken/BTC/USD')
     starting_node = "kraken/BTC/USD"
 
-    best_path = pathfinder.find_best_path(starting_node)
-    print(best_path)
+    # best_path_graph = pathfinder.best_path_graph(starting_node) # returns networkx digraph of the best path
+
 
 if __name__ == '__main__':
     main()
