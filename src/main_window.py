@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import networkx as nx
-import pathfinding
+from src.pathfinding import *
 
 class MainWindow(tk.Tk):
     def __init__(self, controller):
@@ -91,7 +90,7 @@ class MainWindow(tk.Tk):
         self.path_summary.config(text=summary, fg="white")
 
     def display_graph(self, graph, total_multiplier):
-        self.path_summary.config(text=pathfinding.generate_best_path_summary(graph, total_multiplier, 100))
+        self.path_summary.config(text=generate_best_path_summary(graph, total_multiplier, 100))
         plt.figure(figsize=(10, 5))
         pos = nx.planar_layout(graph)
 

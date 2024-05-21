@@ -1,17 +1,17 @@
 import ccxt
-import config
+import src.config
 
 
 class ExchangeDataFetcher:
     def __init__(self):
         self.exchanges = {
             'kraken': ccxt.kraken({
-                'apiKey': config.kraken_api_key,
-                'secret': config.kraken_private_key
+                'apiKey': src.config.kraken_api_key,
+                'secret': src.config.kraken_private_key
             }),
             'gemini': ccxt.gemini({
-                'apiKey': config.gemini_api_key,
-                'secret': config.gemini_private_key
+                'apiKey': src.config.gemini_api_key,
+                'secret': src.config.gemini_private_key
             })
         }
 
