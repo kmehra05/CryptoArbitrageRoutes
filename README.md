@@ -3,8 +3,7 @@
 ## Project Overview
 Cryptocurrency Arbitrage Routes is a system that leverages a custom implementation of Dijkstra's algorithm to identify the most profitable arbitrage opportunities across various cryptocurrency exchanges. By exploiting the price differences of the same asset on different markets (bid/ask spread), the tool helps visualize the most lucrative path considering potential gains.
 
-![Arbitrage Path Finder](https://github.com/kmehra05/CryptoArbitrageRoutes/assets/17500616/a61a0e5a-e91e-439e-8487-20168d8302d6)
-
+<img src="https://github.com/kmehra05/CryptoArbitrageRoutes/assets/17500616/a61a0e5a-e91e-439e-8487-20168d8302d6" width="50%">
 
 ## Features
 - **Data Integration:** Real-time and historical pricing data from multiple exchanges are integrated using ccxt.
