@@ -1,3 +1,4 @@
+import pathfinding
 from fetch_data import ExchangeDataFetcher
 from graph import ArbitrageGraph
 
@@ -19,6 +20,8 @@ def main():
 
     # Update the graph with edges representing arbitrage opportunities
     arbitrage_graph.update_edges(tickers_data)
+
+    pathfinding.PathFinding(arbitrage_graph).print_paths("kraken/BTC/USD")
 
 if __name__ == "__main__":
     main()

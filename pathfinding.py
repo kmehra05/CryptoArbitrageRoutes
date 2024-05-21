@@ -48,13 +48,12 @@ class PathFinding:
             if distance < min_distance and node != source:
                 min_distance = distance
                 best_path = paths[node]
-        return min_distance, best_path
+        total_multiplier = 1/min_distance
+        return min_distance, best_path, total_multiplier
 
     def print_paths(self, source):
-        everything = self.find_all_paths(source)
-        best_distance, best_path = self.find_best_path(source)
-        print(everything)
-        distances, all_paths = everything
+        distances, all_paths = self.find_all_paths(source)
+        best_distance, best_path, total_multiplier = self.find_best_path(source)
 
         print("All paths from source:", source)
         for node, path in all_paths.items():
@@ -62,4 +61,4 @@ class PathFinding:
                 print(f"Path to {node}: {path} with multiplicative weight: {distances[node]}")
         print("\nBest path:")
         print(f"Path: {best_path} with the best multiplicative weight: {best_distance}")
-        print(f"Investment: $10 --> ${(1/best_distance) * 10}")
+        print(f"Investment: $10 --> ${total_multiplier * 10}")
