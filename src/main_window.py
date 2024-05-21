@@ -22,7 +22,7 @@ class MainWindow(tk.Tk):
         self.ticker_list.bind("<FocusIn>", self.on_focus_in_list)
         self.ticker_list.bind("<FocusOut>", self.on_focus_out_list)
 
-        label_ticker = tk.Label(self, text="Enter Starting Ticker (BTC):")
+        label_ticker = tk.Label(self, text="Enter Starting Ticker:")
         label_ticker.pack(pady=10)
 
         self.ticker_entry = ttk.Entry(self, foreground="grey")
@@ -88,6 +88,9 @@ class MainWindow(tk.Tk):
 
     def loading_to_summary(self, summary):
         self.path_summary.config(text=summary, fg="white")
+
+    def loading_to_error(self, error):
+        self.path_summary.config(text=f"Error: {error}", fg="red")
 
     def display_graph(self, graph, total_multiplier):
         self.path_summary.config(text=generate_best_path_summary(graph, total_multiplier, 100))

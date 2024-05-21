@@ -22,6 +22,7 @@ class PathFinding:
         self.graph = arbitrage_graph.graph  # Access the graph attribute of the ArbitrageGraph instance
 
     def find_all_paths(self, source):
+
         # Initialize distances with infinity and set source distance to 1
         distances = {node: float('inf') for node in self.graph.nodes}
         distances[source] = 1
