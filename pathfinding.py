@@ -1,46 +1,45 @@
-import networkx as nx
+import heapq
 
 
-class Pathfinding:
-    def __init__(self, graph):
-        self.graph = graph
+class PathFinding:
+    def __init__(self, arbitrage_graph):
+        self.graph = arbitrage_graph.graph  # Access the graph attribute of the ArbitrageGraph instance
 
-    def find_best_arbitrage(self):
-        # Determine the starting node (exchange with the lowest ask price)
-        lowest_ask_price = float('inf')
-        start_exchange = None
+    def find_all_paths(self, source):
+        # Initialize distances with infinity and set source distance to 1
+        distances = {node: float('inf') for node in self.graph.nodes}
+        distances[source] = 1
 
-        for node, data in self.graph.graph.nodes(data=True):
-            if 'BTC/USD' in data['symbol']:
-                for _, _, edge_data in self.graph.graph.edges(node, data=True):
-                    if edge_data['from_ask'] < lowest_ask_price:
-                        lowest_ask_price = edge_data['from_ask']
-                        start_exchange = node
+        # Priority queue to manage the exploration of nodes
+        queue = [(1, source)]
 
-        if start_exchange:
-            lengths, paths = nx.single_source_dijkstra(self.graph.graph, start_exchange, weight='weight')
-            return start_exchange, paths, lengths
-        else:
-            return None, {}, {}
+        # Record the paths
+        paths = {node: [] for node in self.graph.nodes}
+        paths[source] = [source]
 
-    def print_paths(self, start_exchange, paths, lengths):
-        if start_exchange:
-            print(f"Starting Arbitrage at {start_exchange} with lowest ask price\n")
-            for destination, path in paths.items():
-                if destination != start_exchange and destination.endswith('/USD'):
-                    path_description = " -> ".join([f"{node}" for node in path])
-                    total_profit = 0
-                    # Iterate through the path to calculate total profit
-                    for i in range(len(path) - 1):
-                        edge = self.graph.graph.get_edge_data(path[i], path[i + 1])
-                        if edge:
-                            total_profit += edge['arbitrage_opportunity']
+        while queue:
+            # Extract the node with the smallest distance
+            current_distance, current_node = heapq.heappop(queue)
 
-                    print(f"Path to {destination}:")
-                    print(f"  Route: {path_description}")
-                    print(f"  Total weight (cost): {lengths[destination]:.4f}")
-                    print(f"  Visualization: {' -> '.join(['(' + node + ')' for node in path])}")
-                    print(f"Total profit is ${total_profit}")
-                    print("-" * 50)
-        else:
-            print("No valid starting exchange found.")
+            # Explore each neighbor of the current node
+            for neighbor in self.graph[current_node]:
+                weight = self.graph[current_node][neighbor]['weight']
+                new_distance = current_distance * weight
+
+                # If a shorter path is found, update the distance and path
+                if new_distance < distances[neighbor]:
+                    distances[neighbor] = new_distance
+                    paths[neighbor] = paths[current_node] + [neighbor]
+                    heapq.heappush(queue, (new_distance, neighbor))
+
+        return distances, paths
+
+    def find_best_path(self, source):
+        distances, paths = self.find_all_paths(source)
+        min_distance = float('inf')
+        best_path = []
+        for node, distance in distances.items():
+            if distance < min_distance:
+                min_distance = distance
+                best_path = paths[node]
+        return min_distance, best_path
