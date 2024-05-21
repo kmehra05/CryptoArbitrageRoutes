@@ -2,6 +2,7 @@ import pathfinding
 from fetch_data import ExchangeDataFetcher
 from graph import ArbitrageGraph
 
+
 def main():
     # Instantiate the data fetcher
     data_fetcher = ExchangeDataFetcher()
@@ -22,6 +23,7 @@ def main():
     arbitrage_graph.update_edges(tickers_data)
 
     pathfinding.PathFinding(arbitrage_graph).print_paths("kraken/BTC/USD")
+
 
 if __name__ == "__main__":
     main()

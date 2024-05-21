@@ -1,6 +1,6 @@
 import unittest
-from graph import ArbitrageGraph
-from pathfinding import PathFinding
+from src.graph import ArbitrageGraph
+from src.pathfinding import PathFinding
 
 
 class TestPathFinding(unittest.TestCase):

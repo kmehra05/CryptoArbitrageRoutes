@@ -1,5 +1,6 @@
 import heapq
 
+
 class PathFinding:
     def __init__(self, arbitrage_graph):
         self.graph = arbitrage_graph.graph  # Access the graph attribute of the ArbitrageGraph instance
@@ -48,7 +49,7 @@ class PathFinding:
             if distance < min_distance and node != source:
                 min_distance = distance
                 best_path = paths[node]
-        total_multiplier = 1/min_distance
+        total_multiplier = 1 / min_distance
         return min_distance, best_path, total_multiplier
 
     def print_paths(self, source):

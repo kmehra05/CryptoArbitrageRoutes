@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
-import fetch_data
-import ccxt
+from src import fetch_data
+
 
 class TestExchangeDataFetcher(unittest.TestCase):
     @patch('fetch_data.ccxt.kraken')
@@ -19,10 +19,13 @@ class TestExchangeDataFetcher(unittest.TestCase):
 
     @patch.object(fetch_data.ExchangeDataFetcher, 'fetch_tickers')
     def test_fetch_tickers(self, mock_fetch_tickers):
-        mock_fetch_tickers.return_value = {'BTC/USD': {'kraken': {'bid': 50000, 'ask': 50010}, 'gemini': {'bid': 50020, 'ask': 50030}}}
+        mock_fetch_tickers.return_value = {
+            'BTC/USD': {'kraken': {'bid': 50000, 'ask': 50010}, 'gemini': {'bid': 50020, 'ask': 50030}}}
         result = self.fetcher.fetch_tickers('BTC')
         self.assertIn('BTC/USD', result)
-        self.assertDictEqual(result['BTC/USD'], {'kraken': {'bid': 50000, 'ask': 50010}, 'gemini': {'bid': 50020, 'ask': 50030}})
+        self.assertDictEqual(result['BTC/USD'],
+                             {'kraken': {'bid': 50000, 'ask': 50010}, 'gemini': {'bid': 50020, 'ask': 50030}})
+
 
 if __name__ == '__main__':
     unittest.main()

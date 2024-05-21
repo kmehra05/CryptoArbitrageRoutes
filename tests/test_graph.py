@@ -1,5 +1,5 @@
 import unittest
-from graph import ArbitrageGraph
+from src.graph import ArbitrageGraph
 
 
 class TestArbitrageGraph(unittest.TestCase):
